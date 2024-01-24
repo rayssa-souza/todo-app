@@ -14,9 +14,9 @@ const TodoForm = () => {
     setTask(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(actionCreators.addTodo(task));
+    dispatch(await actionCreators.addTodo(task));
     setTask("");
   };
 

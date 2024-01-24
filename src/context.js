@@ -1,18 +1,31 @@
 import React, { useReducer } from "react";
 import { createContext } from "react";
+import { getTasks } from "./services/todo-service";
+import { addTasks } from "./services/todo-service";
 
 export const actionTypes = {
   ADD_TODO: "ADD_TODO",
   TOGGLE_TODO: "TOGGLE_TODO",
   REMOVE_TODO: "REMOVE_TODO",
   EDIT_TODO: "EDIT_TODO",
+  SET_TODOS: "SET_TODOS",
 };
 
 export const actionCreators = {
-  addTodo: (payload) => ({ type: actionTypes.ADD_TODO, payload }),
+  addTodo: async (payload) => {
+    const result = await addTasks(payload);
+    return { type: actionTypes.ADD_TODO, payload: result };
+  },
   toggleTodo: (payload) => ({ type: actionTypes.TOGGLE_TODO, payload }),
   removeTodo: (payload) => ({ type: actionTypes.REMOVE_TODO, payload }),
   editTodo: (payload) => ({ type: actionTypes.EDIT_TODO, payload }),
+  getTodos: async () => {
+    const result = await getTasks();
+    return {
+      type: actionTypes.SET_TODOS,
+      payload: result,
+    };
+  },
 };
 
 export const initialState = {
@@ -21,14 +34,16 @@ export const initialState = {
 
 export default function reducer(state = initialState, { type, payload }) {
   switch (type) {
+    case actionTypes.SET_TODOS:
+      return {
+        todos: payload,
+      };
+
     case actionTypes.ADD_TODO:
       return {
         todos: [
           {
-            id: (Math.random() * 50).toFixed(2),
-            task: payload,
-            date: new Date(),
-            completed: false,
+            ...payload,
             isEdit: false,
           },
           ...state.todos,
@@ -60,7 +75,8 @@ export default function reducer(state = initialState, { type, payload }) {
       };
 
     default:
-      throw Error("Invalid action type");
+      return state;
+    //   throw Error("Invalid action type");
   }
 }
 

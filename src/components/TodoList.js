@@ -10,13 +10,20 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditOutlineIcon from "@mui/icons-material/ModeEditOutline";
 import { Box } from "@mui/material";
 import Paper from "@mui/material/Paper";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { TodoListContext } from "../context";
 import { actionCreators } from "../context";
 import EditTodoForm from "./EditTodoForm";
 
 const TodoList = () => {
   const { state, dispatch } = useContext(TodoListContext);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      dispatch(await actionCreators.getTodos());
+    };
+    fetchData();
+  }, []);
 
   const handleToggle = (item) => {
     if (!item.isEdit) {
