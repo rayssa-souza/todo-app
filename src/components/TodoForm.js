@@ -16,20 +16,25 @@ const TodoForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(await actionCreators.addTodo(task));
+    if (task.trim() === "") return;
+    dispatch(await actionCreators.addTodo(task.trim()));
     setTask("");
   };
 
   return (
     <Box>
-      <Box sx={{ display: "flex", marginBottom: "30px" }}>
+      <Box sx={{ display: "flex", marginBottom: "50px" }}>
         <img
           style={{ width: "50px", height: "50px", marginRight: "10px" }}
           src={process.env.PUBLIC_URL + "./todo.png"}
           alt="logo todoapp"
         />
         <Box sx={{ display: "flex", marginLeft: "10px" }} alignItems={"center"}>
-          <Typography sx={{ fontSize: "22px" }} variant="h1" component="h1">
+          <Typography
+            sx={{ fontSize: 25, fontWeight: "bold" }}
+            variant="h1"
+            component="h1"
+          >
             Minhas Tarefas
           </Typography>
         </Box>
@@ -41,6 +46,7 @@ const TodoForm = () => {
           label="O que preciso fazer?"
           value={task}
           onChange={handleChange}
+          inputProps={{ maxLength: 20 }}
           placeholder={"Marcar consulta para quinta-feira"}
         />
       </form>

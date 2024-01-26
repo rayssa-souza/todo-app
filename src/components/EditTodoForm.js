@@ -12,9 +12,15 @@ const EditTodoForm = ({ editTask }) => {
     setEdit(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(actionCreators.editTodo({ ...editTask, task: edit }));
+    if (edit.trim() === "") return;
+    dispatch(
+      await actionCreators.editTodo({
+        ...editTask,
+        task: edit.trim(),
+      })
+    );
   };
 
   return (
@@ -24,6 +30,7 @@ const EditTodoForm = ({ editTask }) => {
         variant="standard"
         value={edit}
         onChange={handleChange}
+        inputProps={{ maxLength: 20 }}
       />
     </form>
   );

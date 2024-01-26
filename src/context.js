@@ -2,6 +2,8 @@ import React, { useReducer } from "react";
 import { createContext } from "react";
 import { getTasks } from "./services/todo-service";
 import { addTasks } from "./services/todo-service";
+import { updateTasks } from "./services/todo-service";
+import { deleteTasks } from "./services/todo-service";
 
 export const actionTypes = {
   ADD_TODO: "ADD_TODO",
@@ -12,19 +14,34 @@ export const actionTypes = {
 };
 
 export const actionCreators = {
-  addTodo: async (payload) => {
-    const result = await addTasks(payload);
-    return { type: actionTypes.ADD_TODO, payload: result };
-  },
-  toggleTodo: (payload) => ({ type: actionTypes.TOGGLE_TODO, payload }),
-  removeTodo: (payload) => ({ type: actionTypes.REMOVE_TODO, payload }),
-  editTodo: (payload) => ({ type: actionTypes.EDIT_TODO, payload }),
   getTodos: async () => {
     const result = await getTasks();
     return {
       type: actionTypes.SET_TODOS,
       payload: result,
     };
+  },
+  addTodo: async (payload) => {
+    const result = await addTasks(payload);
+    return { type: actionTypes.ADD_TODO, payload: result };
+  },
+  toggleTodo: async (payload) => {
+    await updateTasks(payload.id, payload.task, !payload.completed);
+    return {
+      type: actionTypes.TOGGLE_TODO,
+      payload: { id: payload.id, completed: !payload.completed },
+    };
+  },
+  editTodo: async (payload) => {
+    await updateTasks(payload.id, payload.task);
+    return {
+      type: actionTypes.EDIT_TODO,
+      payload,
+    };
+  },
+  removeTodo: async (payload) => {
+    await deleteTasks(payload.id);
+    return { type: actionTypes.REMOVE_TODO, payload };
   },
 };
 
@@ -40,6 +57,7 @@ export default function reducer(state = initialState, { type, payload }) {
       };
 
     case actionTypes.ADD_TODO:
+      console.log("add:", payload);
       return {
         todos: [
           {
@@ -50,28 +68,33 @@ export default function reducer(state = initialState, { type, payload }) {
         ],
       };
     case actionTypes.TOGGLE_TODO:
+      console.log("toggle:", payload);
       return {
         todos: state.todos.map((item) => {
           if (item.id === payload.id) {
-            return { ...item, completed: !item.completed };
+            return { ...item, completed: payload.completed };
           }
           return item;
         }),
       };
 
-    case actionTypes.REMOVE_TODO:
-      return {
-        ...state,
-        todos: state.todos.filter((item) => item.id !== payload.id),
-      };
     case actionTypes.EDIT_TODO:
       return {
         todos: state.todos.map((item) => {
           if (item.id === payload.id) {
-            return { ...item, task: payload.task, isEdit: !item.isEdit };
+            return {
+              ...item,
+              task: payload.task,
+              isEdit: !item.isEdit,
+            };
           }
           return item;
         }),
+      };
+    case actionTypes.REMOVE_TODO:
+      return {
+        ...state,
+        todos: state.todos.filter((item) => item.id !== payload.id),
       };
 
     default:

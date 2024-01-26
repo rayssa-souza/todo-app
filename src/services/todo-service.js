@@ -14,6 +14,18 @@ export const addTasks = async (addedTask) => {
   });
 };
 
-export const updateTasks = () => {};
+export const updateTasks = async (
+  taskId,
+  updatedTask,
+  updatedTaskCompleted
+) => {
+  return await instance.patch(`/todos/${taskId}`, {
+    id: taskId,
+    task: updatedTask,
+    completed: updatedTaskCompleted,
+  });
+};
 
-export const deleteTasks = () => {};
+export const deleteTasks = async (taskId) => {
+  return await instance.delete(`/todos/${taskId}`);
+};
