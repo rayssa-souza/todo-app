@@ -30,7 +30,8 @@ const EditTodoForm = ({ editTask }) => {
         variant="standard"
         value={edit}
         onChange={handleChange}
-        inputProps={{ maxLength: 20 }}
+        inputProps={{ maxLength: 35 }}
+        sx={{ wordBreak: "break-word" }}
       />
     </form>
   );

@@ -46,7 +46,7 @@ const TodoForm = () => {
           label="O que preciso fazer?"
           value={task}
           onChange={handleChange}
-          inputProps={{ maxLength: 20 }}
+          inputProps={{ maxLength: 35 }}
           placeholder={"Marcar consulta para quinta-feira"}
         />
       </form>

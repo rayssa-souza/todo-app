@@ -106,9 +106,12 @@ const TodoList = () => {
                       <ListItemText
                         id={labelId}
                         primary={item.task}
-                        sx={
-                          item.completed && { textDecoration: "line-through" }
-                        }
+                        sx={{
+                          wordBreak: "break-word",
+                          textDecoration: item.completed
+                            ? "line-through"
+                            : "initial",
+                        }}
                       />
                     )}
                   </ListItemButton>
