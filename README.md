@@ -1,6 +1,7 @@
 To-Do App
 
-Live Demo: em breve
+![demo-desktop](/todoapp.gif)
+![demo-mobile](/todoappmobile.gif)
 
 Tech Stack
 
